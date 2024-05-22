@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.dmribeiro87.kaizenapp"
-        minSdk = 24
+        minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -86,7 +86,8 @@ dependencies {
     // Kotlin Extensions and Coroutines support for Room
     implementation (libs.androidx.room.ktx)
 
-    // Coroutines
+
+    // Coroutine
     implementation (libs.kotlinx.coroutines.core)
     implementation (libs.kotlinx.coroutines.android)
 
@@ -102,4 +103,10 @@ dependencies {
     //Dagger Hilt
     implementation (libs.hilt.android)
     kapt (libs.hilt.compiler)
+
+    // Room
+    implementation (libs.androidx.room.runtime)
+    kapt ("androidx.room:room-compiler:2.6.1")
+    implementation (libs.androidx.room.ktx)
+    
 }

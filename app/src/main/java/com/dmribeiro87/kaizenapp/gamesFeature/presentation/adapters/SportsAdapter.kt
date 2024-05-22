@@ -8,10 +8,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dmribeiro87.kaizenapp.R
 import com.dmribeiro87.kaizenapp.databinding.ItemHeaderBinding
+import com.dmribeiro87.kaizenapp.gamesFeature.domain.model.Event
 import com.dmribeiro87.kaizenapp.gamesFeature.domain.model.Sports
 
 class SportsAdapter(private val sports: List<Sports>) :
     RecyclerView.Adapter<SportsAdapter.SportsViewHolder>() {
+
+    private var action: ((Event) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SportsViewHolder {
         val binding = ItemHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -25,12 +28,19 @@ class SportsAdapter(private val sports: List<Sports>) :
 
     override fun getItemCount(): Int = sports.size
 
+    fun setAction(action: (Event) -> Unit) {
+        this.action = action
+    }
+
     inner class SportsViewHolder(private val binding: ItemHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(sport: Sports) {
             binding.tvSportName.text = sport.name
             binding.rvEvents.layoutManager = GridLayoutManager(itemView.context, 3)
             val eventsAdapter = EventsAdapter(sport.events)
+            eventsAdapter.setAction { event ->
+                action?.invoke(event)
+            }
             binding.rvEvents.adapter = eventsAdapter
 
             binding.ivExpandCollapse.setOnClickListener {
@@ -49,5 +59,6 @@ class SportsAdapter(private val sports: List<Sports>) :
         }
     }
 }
+
 
 

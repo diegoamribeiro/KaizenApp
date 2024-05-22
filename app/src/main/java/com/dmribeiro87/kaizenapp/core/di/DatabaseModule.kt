@@ -30,3 +30,4 @@ object DatabaseModule {
         return database.eventDao()
     }
 }
+

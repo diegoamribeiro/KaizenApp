@@ -8,8 +8,6 @@ import com.dmribeiro87.kaizenapp.gamesFeature.domain.model.Sports
 
 fun EventResponse.toEvent(): Event {
     val competitors = sliceCompetitors(this.description)
-    val currentTime = System.currentTimeMillis() / 1000
-    val remainingTime = this.startTime - currentTime
     return Event(
         id = this.id,
         sportId = this.sportId,
@@ -17,7 +15,6 @@ fun EventResponse.toEvent(): Event {
         competitorTwo = competitors.second,
         shortDescription = this.shortDescription,
         startTime = this.startTime,
-        remainingTime = remainingTime,
         isFavorite = false
     )
 }
@@ -28,12 +25,6 @@ fun SportResponseItem.toSport(): Sports {
         name = this.name,
         events = this.events.map { it.toEvent() }
     )
-}
-
-
-fun sliceCompetitors(description: String): Pair<String, String> {
-    val competitors = description.split(" - ")
-    return Pair(competitors[0], competitors[1])
 }
 
 fun Event.toEntity(): EventEntity {
@@ -56,7 +47,11 @@ fun EventEntity.toDomain(): Event {
         competitorTwo = this.competitorTwo,
         shortDescription = this.shortDescription,
         startTime = this.startTime,
-        remainingTime = this.startTime - System.currentTimeMillis() / 1000,
         isFavorite = this.isFavorite
     )
+}
+
+fun sliceCompetitors(description: String): Pair<String, String> {
+    val competitors = description.split(" - ")
+    return Pair(competitors[0], competitors[1])
 }

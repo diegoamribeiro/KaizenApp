@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:text="Favorites" />
+            android:text="@string/label_favorites" />
 
         <ImageView
             android:id="@+id/ivExpandCollapse"

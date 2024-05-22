@@ -16,6 +16,7 @@ import com.dmribeiro87.kaizenapp.gamesFeature.domain.model.Sports
 import com.dmribeiro87.kaizenapp.gamesFeature.presentation.adapters.SportsAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -44,7 +45,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 is Resource.Success -> {
-                    Log.d("***Data", resource.data.toString())
                     resource.data?.let { setupRecyclerView(it) }
                 }
 
@@ -57,6 +57,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView(sports: List<Sports>) {
         binding.rvSports.layoutManager = LinearLayoutManager(this)
-        binding.rvSports.adapter = SportsAdapter(sports)
+        val sportsAdapter = SportsAdapter(sports)
+        sportsAdapter.setAction { event ->
+            viewModel.updateFavorite(event)
+        }
+        binding.rvSports.adapter = sportsAdapter
     }
 }

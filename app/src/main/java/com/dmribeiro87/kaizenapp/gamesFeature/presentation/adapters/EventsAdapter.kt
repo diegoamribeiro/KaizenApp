@@ -1,10 +1,12 @@
 package com.dmribeiro87.kaizenapp.gamesFeature.presentation.adapters
 
 
-import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.dmribeiro87.kaizenapp.R
+import com.dmribeiro87.kaizenapp.core.util.EventCountDownTimer
+import com.dmribeiro87.kaizenapp.core.util.SportsCountDownTimer
 import com.dmribeiro87.kaizenapp.core.util.formatTime
 import com.dmribeiro87.kaizenapp.databinding.ItemEventBinding
 import com.dmribeiro87.kaizenapp.gamesFeature.domain.model.Event
@@ -43,24 +45,37 @@ class EventsAdapter(private var events: List<Event>) :
     }
 
     inner class EventViewHolder(private val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root) {
-        private var countDownTimer: CountDownTimer? = null
+        private var eventCountDownTimer: EventCountDownTimer? = null
 
         fun bind(event: Event, action: (Event) -> Unit) {
             binding.tvCompetitorOne.text = event.competitorOne
             binding.tvCompetitorTwo.text = event.competitorTwo
+            binding.ivFavorite.setImageResource(
+                if (event.isFavorite) R.drawable.ic_star_filled else R.drawable.ic_star_border
+            )
 
-            val remainingTimeInMillis = event.remainingTime * 1000
+            val currentTimeInMillis = System.currentTimeMillis()
+            val eventStartTimeInMillis = event.startTime * 1000
+            val remainingTimeInMillis = eventStartTimeInMillis - currentTimeInMillis
 
-            countDownTimer?.cancel()
-            countDownTimer = object : CountDownTimer(remainingTimeInMillis, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    binding.tvEventStartTime.text = formatTime(millisUntilFinished / 1000)
-                }
-
-                override fun onFinish() {
-                    binding.tvEventStartTime.text = "Finished"
-                }
-            }.start()
+            eventCountDownTimer?.cancel()
+            if (remainingTimeInMillis > 0) {
+                eventCountDownTimer = EventCountDownTimer(
+                    SportsCountDownTimer(
+                        startTimeInMillis = remainingTimeInMillis,
+                        intervalInMillis = 1000,
+                        onTick = { millisUntilFinished ->
+                            binding.tvEventStartTime.text = formatTime(millisUntilFinished / 1000)
+                        },
+                        onFinish = {
+                            binding.tvEventStartTime.text = "Finished"
+                        }
+                    )
+                )
+                eventCountDownTimer?.start()
+            } else {
+                binding.tvEventStartTime.text = "Finished"
+            }
 
             binding.root.setOnClickListener {
                 action(event)
@@ -69,11 +84,11 @@ class EventsAdapter(private var events: List<Event>) :
             binding.ivFavorite.setOnClickListener {
                 event.isFavorite = !event.isFavorite
                 action(event)
+                notifyItemChanged(adapterPosition)
             }
         }
     }
 }
-
 
 
 

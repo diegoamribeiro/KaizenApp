@@ -1,32 +1,36 @@
 package com.dmribeiro87.kaizenapp.gamesFeature.data.repository
 
+import com.dmribeiro87.kaizenapp.core.data.local.EventDao
+import com.dmribeiro87.kaizenapp.core.data.local.entity.EventEntity
 import com.dmribeiro87.kaizenapp.core.util.Resource
-import com.dmribeiro87.kaizenapp.gamesFeature.data.datasource.SportsDataSource
-import com.dmribeiro87.kaizenapp.gamesFeature.data.mapper.toSport
+import com.dmribeiro87.kaizenapp.gamesFeature.data.mapper.toEntity
+import com.dmribeiro87.kaizenapp.gamesFeature.domain.model.Event
 import com.dmribeiro87.kaizenapp.gamesFeature.domain.model.Sports
 import com.dmribeiro87.kaizenapp.gamesFeature.domain.repository.SportsRepository
 import javax.inject.Inject
 
+
 class SportsRepositoryImpl @Inject constructor(
-    private val sportsDataSource: SportsDataSource
+    private val sportsDataSource: SportsDataSource,
+    private val eventDao: EventDao
 ) : SportsRepository {
 
     override suspend fun getSportsEvents(): Resource<List<Sports>> {
-        return try {
-            val response = sportsDataSource.getSportsEvents()
-            if (response.isSuccessful) {
-                response.body()?.let { sportsResponseItems ->
-                    val sports =
-                        sportsResponseItems.map { it.toSport() }
-                    Resource.Success(sports)
-                } ?: Resource.Error("An unknown error occurred")
-            } else {
-                Resource.Error("An unknown error occurred")
-            }
-        } catch (e: Exception) {
-            Resource.Error("Couldn't reach the server. Check your internet connection")
-        }
+        return sportsDataSource.getSportsEvents()
+    }
+
+    override suspend fun insertEvent(event: Event) {
+        eventDao.insertEvent(event.toEntity())
+    }
+
+    override suspend fun deleteEvent(eventId: String) {
+        eventDao.deleteEvent(eventId)
+    }
+
+    override suspend fun getFavoriteEvents(): List<EventEntity> {
+        return eventDao.getFavoriteEvents()
     }
 }
+
 
 

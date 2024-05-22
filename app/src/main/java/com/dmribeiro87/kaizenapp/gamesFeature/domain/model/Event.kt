@@ -8,7 +8,6 @@ data class Event(
     val competitorTwo: String,
     val shortDescription: String,
     val startTime: Long,
-    var remainingTime: Long = 0L,
     var isFavorite: Boolean
 )
 

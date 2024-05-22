@@ -8,14 +8,12 @@ import com.dmribeiro87.kaizenapp.core.data.local.entity.EventEntity
 
 @Dao
 interface EventDao {
-
-    @Query("SELECT * FROM events WHERE isFavorite = 1")
-    suspend fun getFavoriteEvents(): List<EventEntity>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEvent(event: EventEntity)
 
     @Query("DELETE FROM events WHERE id = :eventId")
     suspend fun deleteEvent(eventId: String)
 
+    @Query("SELECT * FROM events")
+    suspend fun getFavoriteEvents(): List<EventEntity>
 }
