@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="CustomSwitchGreen" parent="Widget.Material3.CompoundButton.MaterialSwitch">
+        <item name="materialThemeOverlay">@style/CourierThemeOverlaySwitch</item>
+        <item name="trackDecorationTint">@color/switch_green_border_color</item>
+        <item name="trackTint">@color/switch_green_background_color</item>
+        <item name="thumbTint">@color/switch_green_thumb_color</item>
+        <item name="thumbIconTint">@color/switch_green_thumb_icon_color</item>
+        <item name="thumbIcon">@drawable/ic_switch_online</item>
+        <item name="android:icon">@drawable/ic_switch_online</item>
+        <item name="iconSize">1dp</item>
+    </style>
+
+    <style name="CourierThemeOverlaySwitch" parent="">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorSurfaceVariant">@color/black</item>
+        <item name="colorOutline">@color/black</item>
+    </style>
+
+</resources>
