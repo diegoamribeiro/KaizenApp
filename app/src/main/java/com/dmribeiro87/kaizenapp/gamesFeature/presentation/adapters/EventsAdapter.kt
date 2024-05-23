@@ -1,8 +1,10 @@
 package com.dmribeiro87.kaizenapp.gamesFeature.presentation.adapters
 
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.dmribeiro87.kaizenapp.R
 import com.dmribeiro87.kaizenapp.core.util.EventCountDownTimer
@@ -24,7 +26,7 @@ class EventsAdapter(private var events: List<Event>) :
     }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        holder.bind(filteredEvents[position]) { event ->
+        holder.bind(filteredEvents[position], holder.itemView.context) { event ->
             action?.invoke(event)
         }
     }
@@ -44,16 +46,30 @@ class EventsAdapter(private var events: List<Event>) :
         this.action = action
     }
 
-    inner class EventViewHolder(private val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class EventViewHolder(private val binding: ItemEventBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         private var eventCountDownTimer: EventCountDownTimer? = null
 
-        fun bind(event: Event, action: (Event) -> Unit) {
-            binding.tvCompetitorOne.text = event.competitorOne
-            binding.tvCompetitorTwo.text = event.competitorTwo
-            binding.ivFavorite.setImageResource(
+        fun bind(event: Event, context: Context, action: (Event) -> Unit) {
+            binding.apply {
+                setupEventDetails(event, action)
+                setupCountDownTimer(event, context)
+                setupFavoriteButton(event, action)
+            }
+        }
+
+        private fun ItemEventBinding.setupEventDetails(event: Event, action: (Event) -> Unit) {
+            tvCompetitorOne.text = event.competitorOne
+            tvCompetitorTwo.text = event.competitorTwo
+            ivFavorite.setImageResource(
                 if (event.isFavorite) R.drawable.ic_star_filled else R.drawable.ic_star_border
             )
+            root.setOnClickListener {
+                action(event)
+            }
+        }
 
+        private fun ItemEventBinding.setupCountDownTimer(event: Event, context: Context) {
             val currentTimeInMillis = System.currentTimeMillis()
             val eventStartTimeInMillis = event.startTime * 1000
             val remainingTimeInMillis = eventStartTimeInMillis - currentTimeInMillis
@@ -65,23 +81,34 @@ class EventsAdapter(private var events: List<Event>) :
                         startTimeInMillis = remainingTimeInMillis,
                         intervalInMillis = 1000,
                         onTick = { millisUntilFinished ->
-                            binding.tvEventStartTime.text = formatTime(millisUntilFinished / 1000)
+                            tvEventStartTime.text = formatTime(millisUntilFinished / 1000)
+                            tvEventStartTime.setTextColor(
+                                ContextCompat.getColor(
+                                    root.context,
+                                    R.color.switch_green
+                                )
+                            )
                         },
                         onFinish = {
-                            binding.tvEventStartTime.text = "Finished"
+                            tvEventStartTime.text = context.getString(R.string.label_finished)
+                            tvEventStartTime.setTextColor(
+                                ContextCompat.getColor(
+                                    root.context,
+                                    R.color.gray
+                                )
+                            )
                         }
                     )
                 )
                 eventCountDownTimer?.start()
             } else {
-                binding.tvEventStartTime.text = "Finished"
+                tvEventStartTime.text = context.getString(R.string.label_finished)
+                tvEventStartTime.setTextColor(ContextCompat.getColor(root.context, R.color.gray))
             }
+        }
 
-            binding.root.setOnClickListener {
-                action(event)
-            }
-
-            binding.ivFavorite.setOnClickListener {
+        private fun ItemEventBinding.setupFavoriteButton(event: Event, action: (Event) -> Unit) {
+            ivFavorite.setOnClickListener {
                 event.isFavorite = !event.isFavorite
                 action(event)
                 notifyItemChanged(adapterPosition)

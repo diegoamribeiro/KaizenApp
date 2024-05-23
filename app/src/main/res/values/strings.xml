@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">KaizenApp</string>
     <string name="label_favorites">Favorites</string>
+    <string name="label_versus">VS</string>
+    <string name="label_finished">Finished</string>
+    <string name="text_no_favorites_yet">No favorites yet</string>
+    <string name="text_no_matches">No matches</string>
+    <string name="error_no_connection_data_could_be_out_dated">No Connection! Data could be out dated</string>
+    <string name="error_no_connection">No Connection!</string>
+    <string name="text_connected">Connected</string>
+    <string name="error_some_error_occurred">Some error occurred</string>
 </resources>

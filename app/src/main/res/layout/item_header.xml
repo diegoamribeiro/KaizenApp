@@ -11,7 +11,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/brand_black"
+        android:background="@drawable/bg_header_match"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="8dp"
@@ -20,18 +20,19 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            style="@style/Header.TextAppearance"
             android:id="@+id/tvSportName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/brand_yellow"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             tools:text="Sport Name" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switchFavorites"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/ubuntu_regular"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:text="@string/label_favorites" />
@@ -55,4 +56,17 @@
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:listitem="@layout/item_event" />
+
+    <TextView
+        android:id="@+id/tvEmptyState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="@color/gray"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
