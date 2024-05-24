@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dmribeiro87.kaizenapp.R
+import com.dmribeiro87.kaizenapp.core.util.capitalizeFirstLetter
 import com.dmribeiro87.kaizenapp.core.util.hide
 import com.dmribeiro87.kaizenapp.core.util.show
 import com.dmribeiro87.kaizenapp.databinding.ItemHeaderBinding
@@ -39,7 +40,7 @@ class SportsAdapter(private val sports: List<Sports>) :
 
         fun bind(sport: Sports, context: Context) {
             binding.apply {
-                tvSportName.text = sport.name
+                tvSportName.text = sport.name.capitalizeFirstLetter()
                 setupRecyclerView(sport, context)
                 setupExpandCollapseButton()
                 setupFavoritesSwitch(sport, context)
@@ -50,7 +51,7 @@ class SportsAdapter(private val sports: List<Sports>) :
             val currentTime = System.currentTimeMillis() / 1000
             val sortedEvents = sport.events.sortedWith(
                 compareBy<Event> { it.startTime > currentTime }.thenBy { it.startTime }
-            ).sortedWith(compareBy<Event> { it.startTime <= currentTime })
+            ).sortedWith(compareBy { it.startTime <= currentTime })
             rvEvents.layoutManager = GridLayoutManager(context, 3)
             val eventsAdapter = EventsAdapter(sortedEvents)
             eventsAdapter.setAction { event ->

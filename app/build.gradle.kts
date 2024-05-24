@@ -71,7 +71,7 @@ dependencies {
     implementation (libs.kotlinx.coroutines.play.services)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation (libs.mockito.inline)
-    testImplementation ("androidx.arch.core:core-testing:2.1.0")
+    testImplementation (libs.androidx.core.testing)
 
     // Retrofit
     implementation (libs.retrofit)

@@ -21,7 +21,7 @@
 
     <style name="Header.TextAppearance" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/brand_yellow</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="fontFamily">@font/ubuntu_bold</item>
     </style>
 

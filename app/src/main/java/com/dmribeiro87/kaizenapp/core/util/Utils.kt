@@ -18,20 +18,8 @@ fun formatTime(remainingTime: Long): String {
     return String.format("%dd %dh %dmin %ds", days, hours, minutes, seconds)
 }
 
-fun hasInternetConnection(@ApplicationContext appContext: Context): Boolean {
-
-    val connectivityManager: ConnectivityManager = appContext.getSystemService(
-        Context.CONNECTIVITY_SERVICE
-    ) as ConnectivityManager
-
-    val activeNetwork = connectivityManager.activeNetwork ?: return false
-    val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-    return when {
-        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-        else -> return false
-    }
+fun String.capitalizeFirstLetter(): String {
+    return this.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 }
 
 fun View.show() = run { this.visibility = View.VISIBLE }
