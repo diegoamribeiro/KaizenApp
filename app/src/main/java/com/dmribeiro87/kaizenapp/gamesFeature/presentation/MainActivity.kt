@@ -1,5 +1,6 @@
 package com.dmribeiro87.kaizenapp.gamesFeature.presentation
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -8,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dmribeiro87.kaizenapp.R
 import com.dmribeiro87.kaizenapp.core.util.LiveDataInternetConnections
@@ -29,13 +31,23 @@ class MainActivity : AppCompatActivity() {
     private val connection: LiveDataInternetConnections by lazy { LiveDataInternetConnections(application) }
 
 
+    @SuppressLint("ObsoleteSdkInt")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val brandRed = ContextCompat.getColor(this, R.color.brand_red)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = brandRed
+        }
 
-        //viewModel.getSportsEvents()
+        supportActionBar?.apply {
+            setDisplayShowHomeEnabled(true)
+            setLogo(R.drawable.img_betano)
+            setDisplayUseLogoEnabled(true)
+        }
+
         addObservers()
     }
 

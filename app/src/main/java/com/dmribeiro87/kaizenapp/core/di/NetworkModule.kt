@@ -2,6 +2,7 @@ package com.dmribeiro87.kaizenapp.core.di
 
 
 
+import android.annotation.SuppressLint
 import android.os.Build
 import com.dmribeiro87.kaizenapp.core.data.remote.SportsApi
 import dagger.Module
@@ -82,8 +83,9 @@ object NetworkModule {
     }
 }
 
+@SuppressLint("ObsoleteSdkInt")
 fun OkHttpClient.Builder.trustAllCertificate() = apply {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         runCatching {
             val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
                 override fun checkClientTrusted(

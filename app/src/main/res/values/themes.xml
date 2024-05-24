@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.KaizenApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/brand_blue</item>
-        <item name="colorPrimaryVariant">@color/brand_red</item>
+        <item name="colorPrimary">@color/brand_red</item>
+        <item name="colorPrimaryVariant">@color/brand_blue</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/brand_yellow</item>

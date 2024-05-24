@@ -1,6 +1,5 @@
 package com.dmribeiro87.kaizenapp.gamesFeature.presentation.adapters
 
-
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dmribeiro87.kaizenapp.R
+import com.dmribeiro87.kaizenapp.core.util.hide
+import com.dmribeiro87.kaizenapp.core.util.show
 import com.dmribeiro87.kaizenapp.databinding.ItemHeaderBinding
 import com.dmribeiro87.kaizenapp.gamesFeature.domain.model.Event
 import com.dmribeiro87.kaizenapp.gamesFeature.domain.model.Sports
@@ -39,15 +40,19 @@ class SportsAdapter(private val sports: List<Sports>) :
         fun bind(sport: Sports, context: Context) {
             binding.apply {
                 tvSportName.text = sport.name
-                setupRecyclerView(sport)
+                setupRecyclerView(sport, context)
                 setupExpandCollapseButton()
                 setupFavoritesSwitch(sport, context)
             }
         }
 
-        private fun ItemHeaderBinding.setupRecyclerView(sport: Sports) {
-            rvEvents.layoutManager = GridLayoutManager(itemView.context, 3)
-            val eventsAdapter = EventsAdapter(sport.events.sortedByDescending { it.startTime })
+        private fun ItemHeaderBinding.setupRecyclerView(sport: Sports, context: Context) {
+            val currentTime = System.currentTimeMillis() / 1000
+            val sortedEvents = sport.events.sortedWith(
+                compareBy<Event> { it.startTime > currentTime }.thenBy { it.startTime }
+            ).sortedWith(compareBy<Event> { it.startTime <= currentTime })
+            rvEvents.layoutManager = GridLayoutManager(context, 3)
+            val eventsAdapter = EventsAdapter(sortedEvents)
             eventsAdapter.setAction { event ->
                 action?.invoke(event)
             }
@@ -57,10 +62,10 @@ class SportsAdapter(private val sports: List<Sports>) :
         private fun ItemHeaderBinding.setupExpandCollapseButton() {
             ivExpandCollapse.setOnClickListener {
                 if (rvEvents.visibility == View.GONE) {
-                    rvEvents.visibility = View.VISIBLE
+                    rvEvents.show()
                     ivExpandCollapse.setImageResource(R.drawable.ic_expand_less)
                 } else {
-                    rvEvents.visibility = View.GONE
+                    rvEvents.hide()
                     ivExpandCollapse.setImageResource(R.drawable.ic_expand_more)
                 }
             }
@@ -70,21 +75,18 @@ class SportsAdapter(private val sports: List<Sports>) :
             switchFavorites.setOnCheckedChangeListener { _, isChecked ->
                 (rvEvents.adapter as? EventsAdapter)?.filterFavorites(isChecked)
                 if (rvEvents.adapter?.itemCount == 0) {
-                    rvEvents.visibility = View.GONE
-                    tvEmptyState.visibility = View.VISIBLE
+                    rvEvents.hide()
+                    tvEmptyState.show()
                     tvEmptyState.text = if (isChecked) {
                         context.getString(R.string.text_no_favorites_yet)
                     } else {
                         context.getString(R.string.text_no_matches)
                     }
                 } else {
-                    rvEvents.visibility = View.VISIBLE
-                    tvEmptyState.visibility = View.GONE
+                    rvEvents.show()
+                    tvEmptyState.hide()
                 }
             }
         }
     }
 }
-
-
-
